@@ -21,6 +21,7 @@ Para este proyecto, se transforma en una variable binaria llamada riesgo_academi
 0: estudiante sin riesgo académico crítico.
 
 ## 4. Estructura del proyecto
+```text
 prediccion-riesgo-academico/
 │
 ├── data/
@@ -51,7 +52,7 @@ prediccion-riesgo-academico/
 ├── requirements.txt
 ├── README.md
 └── .gitignore
-
+```
 
 
 ## 5. Flujo general del proceso
