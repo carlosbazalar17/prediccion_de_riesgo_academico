@@ -21,30 +21,37 @@ Para este proyecto, se transforma en una variable binaria llamada riesgo_academi
 0: estudiante sin riesgo académico crítico.
 
 ## 4. Estructura del proyecto
-prediccion-riesgo-academico/ 
+prediccion-riesgo-academico/
 │
-├── data/ 
-│ ├── raw/ 
-│ │ └── dataset.csv 
-│ ├── processed/ 
-│ │ └── estudiantes_limpio.csv 
-│ └── outputs/ 
-│ └── predicciones.csv 
-│ ├── src/ 
-│ ├── 01_etl_limpieza.py 
-│ ├── 02_eda.py 
-│ ├── 03_entrenamiento.py 
-│ └── 04_prediccion.py 
-│ ├── dashboard/ 
-│ └── app_streamlit.py 
-│ ├── models/ 
-│ └── modelo_dropout.pkl 
-│ ├── reports/ 
-│ ├── figuras/ 
-│ └── metricas_modelo.txt 
-│ ├── requirements.txt 
-├── README.md 
+├── data/
+│ ├── raw/
+│ │ └── dataset.csv
+│ ├── processed/
+│ │ └── estudiantes_limpio.csv
+│ └── outputs/
+│ └── predicciones.csv
+│
+├── src/
+│ ├── 01_etl_limpieza.py
+│ ├── 02_eda.py
+│ ├── 03_entrenamiento.py
+│ └── 04_prediccion.py
+│
+├── dashboard/
+│ └── app_streamlit.py
+│
+├── models/
+│ └── modelo_dropout.pkl
+│
+├── reports/
+│ ├── figuras/
+│ └── metricas_modelo.txt
+│
+├── requirements.txt
+├── README.md
 └── .gitignore
+
+
 
 ## 5. Flujo general del proceso
 El proyecto sigue un flujo completo de ciencia de datos, desde la carga y limpieza del dataset hasta la visualización final de los resultados. El proceso está dividido en etapas para facilitar el mantenimiento y la comprensión.
