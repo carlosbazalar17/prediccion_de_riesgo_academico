@@ -1,0 +1,26 @@
+MÉTRICAS DEL MODELO PREDICTIVO
+============================================================
+
+Dataset: 4424 registros y 38 columnas
+Modelo: Random Forest Classifier
+
+Accuracy: 0.8847
+Precision: 0.8824
+Recall: 0.7394
+F1-score: 0.8046
+ROC-AUC: 0.932
+F1 promedio CV: 0.7871
+
+Matriz de confusión:
+[[573  28]
+ [ 74 210]]
+
+Reporte de clasificación:
+              precision    recall  f1-score   support
+
+           0       0.89      0.95      0.92       601
+           1       0.88      0.74      0.80       284
+
+    accuracy                           0.88       885
+   macro avg       0.88      0.85      0.86       885
+weighted avg       0.88      0.88      0.88       885
