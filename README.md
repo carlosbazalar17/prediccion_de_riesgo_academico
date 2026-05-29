@@ -1,98 +1,126 @@
 # Predicción de Riesgo Académico
 
 ## 1. Descripción del proyecto
+Este proyecto desarrolla un sistema de predicción de riesgo académico estudiantil utilizando técnicas de análisis de datos y machine learning. A partir de información académica, socioeconómica y administrativa de estudiantes, el modelo identifica posibles casos de abandono o bajo rendimiento, permitiendo priorizar acciones de seguimiento y apoyo académico.
 
 ## 2. Objetivo del proyecto
+El objetivo principal es construir un modelo predictivo capaz de clasificar a los estudiantes según su nivel de riesgo académico. Para ello, se realiza un flujo completo de trabajo que incluye limpieza de datos, análisis exploratorio, entrenamiento del modelo, generación de predicciones y visualización de resultados mediante un dashboard interactivo.
 
 ## 3. Dataset utilizado
+Se utiliza el dataset Predict Students Dropout and Academic Success, disponible en Kaggle. Este conjunto de datos contiene información de estudiantes universitarios, incluyendo variables como estado civil, modalidad de postulación, curso, calificaciones previas, situación económica, beca, deuda, edad de ingreso, unidades curriculares aprobadas, notas semestrales e indicadores macroeconómicos.
+
+La variable objetivo original es target, la cual clasifica a los estudiantes en tres categorías:
+
+Dropout: estudiante que abandonó.
+Enrolled: estudiante matriculado.
+Graduate: estudiante graduado.
+
+Para este proyecto, se transforma en una variable binaria llamada riesgo_academico:
+
+1: estudiante en riesgo académico.
+0: estudiante sin riesgo académico crítico.
 
 ## 4. Estructura del proyecto
+prediccion-riesgo-academico/ │ ├── data/ │ ├── raw/ │ │ └── dataset.csv │ ├── processed/ │ │ └── estudiantes_limpio.csv │ └── outputs/ │ └── predicciones.csv │ ├── src/ │ ├── 01_etl_limpieza.py │ ├── 02_eda.py │ ├── 03_entrenamiento.py │ └── 04_prediccion.py │ ├── dashboard/ │ └── app_streamlit.py │ ├── models/ │ └── modelo_dropout.pkl │ ├── reports/ │ ├── figuras/ │ └── metricas_modelo.txt │ ├── requirements.txt ├── README.md └── .gitignore
 
 ## 5. Flujo general del proceso
+El proyecto sigue un flujo completo de ciencia de datos, desde la carga y limpieza del dataset hasta la visualización final de los resultados. El proceso está dividido en etapas para facilitar el mantenimiento y la comprensión.
 
 ### 5.1 Limpieza y preparación de datos
 
-El primer módulo del proyecto corresponde al proceso de **ETL y limpieza de datos**, implementado en el archivo `01_etl_limpieza.py`. Su finalidad es cargar el dataset original, preparar la información para las siguientes etapas del análisis y generar un archivo limpio que será utilizado posteriormente en el análisis exploratorio, entrenamiento del modelo y generación de predicciones.
+En esta etapa se carga el dataset original, se normalizan los nombres de las columnas, se eliminan duplicados y se tratan posibles valores nulos. Además, se transforma la variable objetivo target en una variable binaria llamada riesgo_academico, donde los estudiantes con estado Dropout son clasificados como estudiantes en riesgo.
 
-El proceso inicia definiendo las rutas principales del proyecto mediante `Path`, lo que permite ubicar correctamente el archivo original `dataset.csv` dentro de la carpeta `data/raw/`. Asimismo, se establece como salida la carpeta `data/processed/`, donde se almacenará el archivo procesado `estudiantes_limpio.csv`.
-
-Antes de cargar los datos, el módulo verifica que el archivo original exista. En caso contrario, se detiene la ejecución y muestra un error indicando que no se encontró el dataset. Esta validación evita errores posteriores durante el procesamiento.
-
-Luego, el dataset es cargado con la librería `pandas`, mostrando inicialmente sus dimensiones y columnas originales. Posteriormente, se realiza una normalización de los nombres de las columnas, convirtiéndolos a minúsculas, eliminando espacios, reemplazando caracteres especiales y estandarizando su formato. Esto facilita el manejo de las variables dentro del código y evita problemas al referenciar columnas.
-
-Después de normalizar las columnas, se eliminan registros duplicados para evitar que datos repetidos afecten el análisis o el entrenamiento del modelo. También se realiza el tratamiento de valores nulos: en las columnas numéricas, los valores faltantes son reemplazados por la mediana; mientras que en las columnas categóricas se utiliza la moda. Esta estrategia permite conservar los registros sin eliminar filas completas del dataset.
-
-Una parte importante del proceso consiste en renombrar la variable objetivo `target` como `estado_academico`, con el fin de darle un nombre más descriptivo dentro del contexto del proyecto. A partir de esta variable, se crea una nueva columna llamada `riesgo_academico`, la cual transforma el problema en una clasificación binaria. En esta nueva variable, el valor `1` representa a los estudiantes en condición de abandono académico (`Dropout`), mientras que el valor `0` agrupa a los estudiantes que continúan matriculados (`Enrolled`) o que lograron graduarse (`Graduate`).
-
-Finalmente, el dataset limpio es guardado en la ruta `data/processed/estudiantes_limpio.csv`. El módulo también imprime información de control, como las dimensiones finales del dataset, la distribución de la variable `estado_academico`, la distribución de la variable `riesgo_academico` y una vista preliminar de las primeras filas del archivo procesado.
+También se generan archivos limpios dentro de la carpeta data/processed/, los cuales serán utilizados en las siguientes fases del proyecto.
 
 ### 5.2 Análisis exploratorio de datos
+En el análisis exploratorio se revisan las dimensiones del dataset, los tipos de variables, la distribución de la variable objetivo y el comportamiento de las principales variables académicas. Se generan gráficos para analizar patrones relacionados con el abandono estudiantil, como edad de ingreso, nota de admisión, unidades curriculares aprobadas y distribución del riesgo académico.
 
-El segundo módulo del proyecto corresponde al **Análisis Exploratorio de Datos**, implementado en el archivo `02_eda.py`. Esta etapa tiene como finalidad revisar el comportamiento general del dataset limpio, obtener información descriptiva de las variables y generar gráficos que permitan comprender mejor la distribución de los estudiantes y su relación con el riesgo académico.
-
-El módulo trabaja con el archivo `estudiantes_limpio.csv`, generado previamente durante la fase de limpieza y almacenado en la carpeta `data/processed/`. Además, se define una carpeta de salida en `reports/figuras/`, donde se guardan automáticamente todas las visualizaciones generadas durante el análisis.
-
-Al iniciar el proceso, el script carga el dataset limpio mediante `pandas` y muestra información general del conjunto de datos, como sus dimensiones, primeras filas, estructura de columnas, tipos de datos, estadísticas descriptivas y cantidad de valores nulos por columna. Esta revisión permite comprobar que el archivo procesado se encuentra correctamente preparado para las etapas posteriores del proyecto.
-
-También se analiza la distribución de las variables principales: `estado_academico` y `riesgo_academico`. La primera permite observar la cantidad de estudiantes según su situación académica, mientras que la segunda resume el problema en términos de riesgo, diferenciando entre estudiantes con posible abandono académico y estudiantes sin riesgo directo.
-
-Como parte del análisis exploratorio, se generan siete gráficos principales. Estos gráficos permiten visualizar la distribución del estado académico, la distribución del riesgo académico, la edad de los estudiantes al momento de la matrícula, la nota de admisión según el estado académico, las unidades curriculares aprobadas en el primer y segundo semestre, y la matriz de correlación entre variables numéricas.
-
-Los gráficos generados son almacenados automáticamente en la carpeta `reports/figuras/` con nombres ordenados del `01` al `07`, lo que facilita su posterior revisión y documentación. En este README general solo se describe el proceso de generación de las visualizaciones, mientras que la interpretación detallada de cada gráfico será desarrollada en un reporte específico.
-
-Finalmente, este módulo permite obtener una visión inicial del comportamiento de los datos antes del entrenamiento del modelo, identificando patrones generales, posibles relaciones entre variables y diferencias relevantes entre los grupos de estudiantes.
-
+Las visualizaciones se guardan en la carpeta reports/figuras/ para ser utilizadas posteriormente en el análisis, documentación o presentación del proyecto.
 
 ### 5.3 Entrenamiento del modelo
+En esta etapa se entrena un modelo de clasificación utilizando machine learning. El dataset se divide en datos de entrenamiento y prueba, y se utiliza un modelo Random Forest para predecir si un estudiante presenta riesgo académico.
 
-El tercer módulo del proyecto corresponde al **entrenamiento del modelo predictivo**, implementado en el archivo `03_entrenamiento.py`. Esta etapa tiene como objetivo construir un modelo de clasificación que permita predecir si un estudiante presenta riesgo académico, tomando como referencia la variable binaria `riesgo_academico` generada durante la fase de limpieza.
+El modelo se evalúa mediante métricas como:
 
-El proceso inicia cargando el archivo `estudiantes_limpio.csv`, ubicado en la carpeta `data/processed/`. A partir de este dataset, se separan las variables predictoras y la variable objetivo. Las columnas `estado_academico` y `riesgo_academico` son excluidas del conjunto de entrada, mientras que `riesgo_academico` se utiliza como variable objetivo del modelo.
+Accuracy
+Precision
+Recall
+F1-score
+ROC-AUC
 
-Posteriormente, el módulo identifica las variables numéricas del dataset, ya que estas serán utilizadas como entradas para el entrenamiento. Para preparar los datos, se emplea un `ColumnTransformer` junto con `StandardScaler`, permitiendo estandarizar las variables numéricas antes de ingresar al modelo. Este paso ayuda a que las características tengan una escala comparable durante el proceso de aprendizaje.
-
-El modelo seleccionado para esta etapa es un `RandomForestClassifier`, configurado con 300 árboles de decisión, una semilla aleatoria fija para garantizar reproducibilidad y el parámetro `class_weight="balanced"`, con el fin de considerar el posible desbalance entre estudiantes con riesgo y sin riesgo académico.
-
-El flujo de preprocesamiento y modelo se integra mediante un `Pipeline`, lo que permite ejecutar de forma ordenada la transformación de los datos y el entrenamiento del clasificador. Luego, el dataset se divide en un conjunto de entrenamiento y un conjunto de prueba, utilizando el 80% de los datos para entrenamiento y el 20% para evaluación. Además, se aplica una división estratificada para conservar la proporción original de las clases en ambos subconjuntos.
-
-Después de entrenar el modelo, se generan predicciones sobre el conjunto de prueba y se calculan diferentes métricas de evaluación, entre ellas: `accuracy`, `precision`, `recall`, `F1-score` y `ROC-AUC`. Estas métricas permiten analizar el rendimiento general del modelo, así como su capacidad para detectar correctamente los casos de riesgo académico.
-
-Adicionalmente, se aplica validación cruzada con 5 particiones utilizando el `F1-score` como métrica principal. Esto permite obtener una evaluación más estable del desempeño del modelo y reducir la dependencia de una única división entre entrenamiento y prueba.
-
-Como salida final, el modelo entrenado se guarda en la carpeta `models/` con el nombre `modelo_dropout.pkl`, utilizando la librería `joblib`. Asimismo, las métricas obtenidas, la matriz de confusión y el reporte de clasificación son almacenados en el archivo `reports/metricas_modelo.txt`, permitiendo documentar los resultados del entrenamiento para su posterior revisión.
-
-En conjunto, este módulo constituye la parte central del proyecto, ya que permite construir y guardar el modelo que posteriormente será utilizado para generar predicciones de riesgo académico sobre nuevos datos o registros procesados.
-
+Finalmente, el modelo entrenado se guarda en la carpeta models/ con el nombre modelo_dropout.pkl.
 
 ### 5.4 Generación de predicciones
+Después del entrenamiento, se utiliza el modelo guardado para generar predicciones sobre los estudiantes del dataset. El sistema calcula la probabilidad de riesgo académico y asigna un nivel de riesgo, como bajo, medio o alto.
 
-El cuarto módulo del proyecto corresponde a la **generación de predicciones**, implementado en el archivo `04_prediccion.py`. Esta etapa utiliza el modelo entrenado previamente para estimar el riesgo académico de los estudiantes y generar un archivo final con los resultados ordenados según la probabilidad de abandono.
+El resultado final se guarda en:
 
-El proceso inicia definiendo las rutas necesarias del proyecto. El módulo utiliza como entrada el dataset limpio `estudiantes_limpio.csv`, ubicado en la carpeta `data/processed/`, y el modelo entrenado `modelo_dropout.pkl`, almacenado en la carpeta `models/`. Además, se define como carpeta de salida `data/outputs/`, donde se guardará el archivo `predicciones.csv`.
+data/outputs/predicciones.csv
 
-Antes de ejecutar las predicciones, el script verifica que existan tanto el dataset limpio como el modelo entrenado. Si alguno de estos archivos no se encuentra disponible, el programa detiene la ejecución y muestra un mensaje de error. Esta validación permite asegurar que las etapas previas del flujo hayan sido ejecutadas correctamente.
-
-Luego, el módulo carga el dataset procesado mediante `pandas` y recupera el modelo entrenado utilizando `joblib`. A partir del dataset, se separan las variables predictoras eliminando las columnas `estado_academico` y `riesgo_academico`, ya que estas corresponden a la variable original de referencia y a la variable objetivo del modelo.
-
-Con el modelo cargado, se generan dos resultados principales para cada estudiante. Primero, se calcula la columna `prediccion_riesgo`, que indica si el modelo clasifica al estudiante como en riesgo académico o no. Segundo, se calcula la columna `probabilidad_riesgo`, que representa la probabilidad estimada de que el estudiante pertenezca a la clase de riesgo académico.
-
-Para facilitar la interpretación de los resultados, el módulo crea una variable adicional llamada `nivel_riesgo`. Esta variable clasifica la probabilidad de riesgo en tres niveles: `Bajo`, `Medio` y `Alto`. Los estudiantes con probabilidad entre 0 y 0.4 son clasificados como riesgo bajo; aquellos con probabilidad entre 0.4 y 0.7 como riesgo medio; y los que se encuentran entre 0.7 y 1 como riesgo alto.
-
-Posteriormente, los registros se ordenan de mayor a menor según la columna `probabilidad_riesgo`, permitiendo identificar rápidamente a los estudiantes que presentan mayor probabilidad de abandono académico. El resultado final se guarda en el archivo `data/outputs/predicciones.csv`.
-
-Como salida informativa, el módulo muestra en consola los 15 estudiantes con mayor riesgo académico, incluyendo variables relevantes como el estado académico, la predicción del modelo, la probabilidad de riesgo, el nivel de riesgo, la edad al momento de matrícula, la nota de admisión y las unidades curriculares aprobadas en el primer y segundo semestre. También se muestra la distribución general de los niveles de riesgo generados.
-
-En conjunto, este módulo permite transformar el modelo predictivo en una herramienta práctica para priorizar casos de seguimiento académico, ya que entrega un ranking interpretable de estudiantes según su probabilidad estimada de abandono.
-
+Este archivo contiene las predicciones, probabilidades y etiquetas interpretables que serán utilizadas en el dashboard.
 
 ### 5.5 Aplicación en Streamlit
+Se desarrolla un dashboard interactivo con Streamlit para visualizar los resultados del modelo. La aplicación permite revisar indicadores principales, filtrar estudiantes por variables como género, condición de beca o nivel de riesgo, y consultar un ranking de estudiantes con mayor probabilidad de riesgo académico.
+
+El dashboard facilita la interpretación de los resultados para usuarios no técnicos, permitiendo convertir las predicciones del modelo en información útil para la toma de decisiones.
 
 ## 6. Resultados generales
 
 ## 7. Tecnologías utilizadas
+El proyecto utiliza las siguientes tecnologías y librerías:
+
+Python
+Pandas
+NumPy
+Matplotlib
+Seaborn
+Scikit-learn
+Joblib
+Streamlit
+Git y GitHub
 
 ## 8. Instalación y ejecución
+1. Clonar el repositorio
 
-## 9. Archivos principales
+    git clone https://github.com/carlosbazalar17/prediccion_de_riesgo_academico.git
 
-## 10. Conclusiones generales
+    cd prediccion-riesgo-academico
+
+2. Crear entorno virtual
+
+    python -m venv venv
+   
+4. Activar entorno virtual
+
+En Windows:
+
+    venv\Scripts\activate
+
+En Linux o Mac:
+
+    source venv/bin/activate
+4. Instalar dependencias
+    pip install -r requirements.txt
+5. Colocar el dataset
+
+Descargar el dataset desde Kaggle y colocarlo en la siguiente ruta:
+
+    data/raw/dataset.csv
+6. Ejecutar limpieza de datos
+   
+    python src/01_etl_limpieza.py
+8. Ejecutar análisis exploratorio
+   
+    python src/02_eda.py
+9. Entrenar el modelo
+   
+    python src/03_entrenamiento.py
+10. Generar predicciones
+    
+    python src/04_prediccion.py
+11. Ejecutar dashboard
+    
+    streamlit run dashboard/app_streamlit.py
+
+
+## 9. Conclusiones generales
