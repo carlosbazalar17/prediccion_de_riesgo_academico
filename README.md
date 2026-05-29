@@ -97,6 +97,26 @@ Se desarrolla un dashboard interactivo con Streamlit para visualizar los resulta
 El dashboard facilita la interpretación de los resultados para usuarios no técnicos, permitiendo convertir las predicciones del modelo en información útil para la toma de decisiones.
 
 ## 6. Resultados generales
+El modelo de Machine Learning fue entrenado utilizando un dataset real de estudiantes universitarios con información académica, demográfica y socioeconómica.
+
+### Métricas obtenidas
+
+| Métrica | Valor |
+|----------|--------|
+| Accuracy | 88.47% |
+| Precision | 88.24% |
+| Recall | 73.94% |
+| F1-Score | 80.46% |
+| ROC-AUC | 93.20% |
+
+Los resultados obtenidos demuestran que el modelo posee una alta capacidad para identificar estudiantes con riesgo académico. La métrica ROC-AUC superior al 93% indica una excelente capacidad de discriminación entre estudiantes en riesgo y estudiantes sin riesgo.
+
+### Principales hallazgos
+
+- Los estudiantes con menor cantidad de unidades aprobadas durante los primeros semestres presentan mayor probabilidad de abandono.
+- Las calificaciones académicas tienen una fuerte relación con el estado académico final del estudiante.
+- El rendimiento durante los primeros ciclos constituye uno de los principales indicadores de riesgo académico.
+- El modelo permite generar alertas tempranas para identificar estudiantes que requieren seguimiento o intervención.
 
 ## 7. Tecnologías utilizadas
 El proyecto utiliza las siguientes tecnologías y librerías:
@@ -155,4 +175,26 @@ Descargar el dataset desde Kaggle y colocarlo en la siguiente ruta:
     streamlit run dashboard/app_streamlit.py
 
 
-## 9. Conclusiones generales
+## 9. Dashboard interactivo
+
+El proyecto incluye una aplicación desarrollada en Streamlit para visualizar los resultados del modelo predictivo.
+
+### Vista general
+
+![Dashboard principal](reports/screenshots/dashboard_1.png)
+
+### Filtros interactivos
+
+![Filtros](reports/screenshots/dashboard_2.png)
+
+### Ranking de estudiantes con mayor riesgo
+
+![Ranking](reports/screenshots/dashboard_3.png)
+
+## 10. Conclusiones generales
+- Se desarrolló un sistema completo de predicción de riesgo académico utilizando técnicas de análisis de datos y Machine Learning.
+- El modelo Random Forest obtuvo resultados satisfactorios, alcanzando una precisión superior al 88% y un ROC-AUC superior al 93%.
+- Las variables relacionadas con el desempeño académico durante los primeros semestres demostraron ser las más relevantes para la predicción del riesgo académico.
+- La solución permite identificar estudiantes con probabilidad de abandono de manera temprana, facilitando la toma de decisiones institucionales.
+- La integración de Streamlit permite transformar los resultados del modelo en información visual e interactiva para usuarios no técnicos.
+- El proyecto demuestra la aplicación práctica de un flujo completo de Ciencia de Datos, desde la limpieza de datos hasta el despliegue de una aplicación analítica.
