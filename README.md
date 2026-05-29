@@ -24,28 +24,29 @@ Para este proyecto, se transforma en una variable binaria llamada riesgo_academi
 prediccion-riesgo-academico/
 │
 ├── data/
-│ ├── raw/
-│ │ └── dataset.csv
-│ ├── processed/
-│ │ └── estudiantes_limpio.csv
-│ └── outputs/
-│ └── predicciones.csv
+│   ├── raw/
+│   │   └── dataset.csv
+│   └── processed/
+│       └── estudiantes_limpio.csv
+│
+├── outputs/
+│   └── predicciones.csv
 │
 ├── src/
-│ ├── 01_etl_limpieza.py
-│ ├── 02_eda.py
-│ ├── 03_entrenamiento.py
-│ └── 04_prediccion.py
+│   ├── 01_etl_limpieza.py
+│   ├── 02_eda.py
+│   ├── 03_entrenamiento.py
+│   └── 04_prediccion.py
 │
 ├── dashboard/
-│ └── app_streamlit.py
+│   └── app_streamlit.py
 │
 ├── models/
-│ └── modelo_dropout.pkl
+│   └── modelo_dropout.pkl
 │
 ├── reports/
-│ ├── figuras/
-│ └── metricas_modelo.txt
+│   ├── figuras/
+│   └── metricas_modelo.txt
 │
 ├── requirements.txt
 ├── README.md
